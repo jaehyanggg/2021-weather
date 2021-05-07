@@ -45,7 +45,7 @@ html, body {font-family: 'Sunflower', sans-serif; font-size: 16px; line-height: 
 .header-wrapper::after {display: block; content: ''; width: 40px; height: 3px; background-color: rgba(255, 255, 255, .5); margin: auto;}
 
 /********************** container-wrapper *********************/
-.container-wrapper {margin-top: 2em; display: flex; justify-content: space-between; flex-grow: 1;}
+.container-wrapper {margin-top: 2em; margin-bottom: 2em; display: flex; justify-content: space-between; flex-grow: 1;}
 
 
 /********************** Weather *********************/
@@ -54,7 +54,7 @@ html, body {font-family: 'Sunflower', sans-serif; font-size: 16px; line-height: 
 
 /********************** Map *********************/
 .map-wrapper {width: 49%; height: 100%;}
-.map-wrapper #map {height: 90%; border: 1px solid yellowgreen;}
+.map-wrapper #map {width: 100%; height: 100%;}
 
 
 
