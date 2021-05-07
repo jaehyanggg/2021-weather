@@ -1,7 +1,6 @@
 /* 
 카카오: ef49ff68e417124e9e441b85809adfd3
-
-
+openweathermap.com icon: http://openweathermap.org/img/wn/10d@2x.png
 */
 
 $(function() {
