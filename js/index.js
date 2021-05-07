@@ -10,7 +10,7 @@ $(function() {
 	var map; // kakao 지도 객체
 	var time;
 	var timeDivision;
-	var mapCenter = {lat: 35.8, lon: 127.55}
+	var mapCenter = {lat: 35.80, lon: 127.55}
 	var weatherIcon = {
 		i01d: 'bi-brightness-high',
 		i02d: 'bi-cloud-sun',
@@ -54,20 +54,20 @@ $(function() {
 			draggable: false,
 			zoomable: false,
 		};
-
 		map = new kakao.maps.Map($map[0], options);
 		map.addOverlayMapTypeId(kakao.maps.MapTypeId.TERRAIN);
+		$(window).resize(onResize).trigger('resize');
 	}
 
 	/*************** 이벤트 콜백 *****************/
 	function onResize() {
 		var windowHeight = $(window).innerHeight();
 		var lat = (windowHeight > 800 || windowHeight < 600) ? mapCenter.lat : mapCenter.lat + 1;
-		map.setCenter(new kakao.maps.LatLng(mapCenter.lat, mapCenter.lon));
+		map.setCenter(new kakao.maps.LatLng(lat, mapCenter.lon));
 		map.setLevel(windowHeight > 800 ? 13 : 14);
 	}
 	
 
 	/*************** 이벤트 등록 *****************/
-	$(window).resize(onResize);
+
 });
