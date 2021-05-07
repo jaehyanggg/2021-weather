@@ -74,7 +74,8 @@ html, body {font-family: 'Sunflower', sans-serif; font-size: 16px; line-height: 
 }
 
 @media (max-width: 991px) {
-	
+	.weather-wrapper {width: 39%;}
+	.map-wrapper {width: 59%;}
 }
 
 @media (max-width: 767px) {
@@ -83,6 +84,9 @@ html, body {font-family: 'Sunflower', sans-serif; font-size: 16px; line-height: 
 	.bg-wrap.bg3 {bottom: -10px; right: 10%; width: 80px; font-size: 80px;}
 
 	.header-wrapper h1.title {font-size: 3em;}
+
+	.weather-wrapper {width: 100%;}
+	.map-wrapper {display: none;}
 }
 
 @media (max-width: 575px) {

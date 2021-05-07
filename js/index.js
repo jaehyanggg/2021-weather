@@ -10,10 +10,7 @@ $(function() {
 	var map; // kakao 지도 객체
 	var time;
 	var timeDivision;
-	var mapCenter = {
-		lat: 36.239934,
-		lon: 127.555918,
-	}
+	var mapCenter = {lat: 35.8, lon: 127.55}
 	var weatherIcon = {
 		i01d: 'bi-brightness-high',
 		i02d: 'bi-cloud-sun',
@@ -64,7 +61,10 @@ $(function() {
 
 	/*************** 이벤트 콜백 *****************/
 	function onResize() {
+		var windowHeight = $(window).innerHeight();
+		var lat = (windowHeight > 800 || windowHeight < 600) ? mapCenter.lat : mapCenter.lat + 1;
 		map.setCenter(new kakao.maps.LatLng(mapCenter.lat, mapCenter.lon));
+		map.setLevel(windowHeight > 800 ? 13 : 14);
 	}
 	
 
