@@ -65,14 +65,15 @@ $(function() {
 
 	/*************** 이벤트 콜백 *****************/
 	function onGetCity(r) {
-		var position = new kakao.maps.LatLng(37.49887, 127.026581);  
-		var customOverlay = new kakao.maps.CustomOverlay({
-				position: position,
-				content: content,
-				xAnchor: 0.3,
-				yAnchor: 0.91
+		r.city.forEach(function(v, i) {
+			var customOverlay = new kakao.maps.CustomOverlay({
+					position: new kakao.maps.LatLng(v.lat, v.lon),
+					content: '<div class="co-wrapper">'+v.name+'</div>',
+					xAnchor: 0,
+					yAnchor: 0
+			});
+			customOverlay.setMap(map);
 		});
-		customOverlay.setMap(map);
 	}
 
 	function onResize() {
