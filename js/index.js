@@ -95,10 +95,10 @@ $(function() {
 					yAnchor: v.anchor ? v.anchor.y : 0.65,
 			});
 			customOverlay.setMap(map);
+			$(customOverlay.a).mouseenter(onOverlayEnter);
+			$(customOverlay.a).mouseleave(onOverlayLeave);
+			$(customOverlay.a).click(onOverlayClick);
 		});
-		$('.co-wrapper').mouseenter(onOverlayEnter);
-		$('.co-wrapper').mouseleave(onOverlayLeave);
-		$('.co-wrapper').click(onOverlayClick);
 		$(window).trigger('resize');
 	}
 
@@ -125,11 +125,11 @@ $(function() {
 	}
 
 	function onOverlayEnter() {
-		// this => .co-wrapper중 클릭당한 넘
+		// this => .co-wrapper중 호버당한 놈 부모
 		$(this).find('.co-wrap').css('display', 'flex');
-		$(this).parent().css('z-index', 1);
-		sendData.lat = $(this).data('lat');	// data-lat
-		sendData.lon = $(this).data('lon');	// data-lon
+		$(this).css('z-index', 1);
+		sendData.lat = $(this).find('.co-wrapper').data('lat');	// data-lat
+		sendData.lon = $(this).find('.co-wrapper').data('lon');	// data-lon
 		$.get(dailyURL, sendData, onLoad.bind(this));
 		function onLoad(r) {
 			$(this).find('.temp').text(r.main.temp);
@@ -138,7 +138,7 @@ $(function() {
 	}
 
 	function onOverlayLeave() {
-		$(this).parent().css('z-index', 0);
+		$(this).css('z-index', 0);
 		$(this).find('.co-wrap').css('display', 'none');
 	}
 });
