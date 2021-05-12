@@ -81,7 +81,18 @@
 
 	// 주문상품 배열 -> 문자열
 	// 숙제(8교시)
+	var tempArr = [];
+	order2.forEach(function(v, i) {
+		tempArr[i] = v.join('|')
+	});
+	var stringOrder = tempArr.join('^');
+	console.log(stringOrder);
 	
+	for(var i=0, str=[]; i<order2.length; i++) {
+		str[i] = order2[i].join('|');
+	}
+	var strOrder = str.join('^');
+	console.log(strOrder);
 
 
 	/* 배열의 정렬 - sort(), reverse() */
