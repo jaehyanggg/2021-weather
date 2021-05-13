@@ -205,6 +205,9 @@ $(function() {
 			$(customOverlay.a).mouseenter(onOverlayEnter);
 			$(customOverlay.a).mouseleave(onOverlayLeave);
 			$(customOverlay.a).click(onOverlayClick);
+
+			var html = '<li class="city '+(v.title ? 'title' : '')+'">'+v.name+'</li>';
+			$('.weather-wrapper .city-wrap').append(html);
 		});
 		$(window).trigger('resize');
 	}
@@ -223,6 +226,7 @@ $(function() {
 			$('.minimap').show();
 			$('.map-wrapper .co-wrapper').removeClass('active');
 		}
+		$('.weather-wrapper .city-wrapper').hide();
 	}
 	
 	function makeSlickButton($slick, $prev, $next) {
@@ -271,6 +275,11 @@ $(function() {
 		$(this).css('z-index', 0);
 		$(this).find('.co-wrap').css('display', 'none');
 	}
+
+	$('.bt-city').click(function(){
+		$('.weather-wrapper .city-wrapper').toggle();
+	});
+
 });
 
 
