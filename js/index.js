@@ -30,8 +30,12 @@ $(function() {
 	var todayURL = 'https://api.openweathermap.org/data/2.5/weather';
 	var weeklyURL = 'https://api.openweathermap.org/data/2.5/forecast';
 	var yesterdayURL = 'https://api.openweathermap.org/data/2.5/onecall/timemachine';
-	var sendData = { appid: '850ac9f9b1b71ba716eb6bf2cd560849', units: 'metric', lang: 'kr' };
-	var defPath = '//via.placeholder.com/40x40/c4f1f1?text=%20';
+	var sendData = { 
+		appid: '850ac9f9b1b71ba716eb6bf2cd560849', 
+		units: 'metric', 
+		lang: 'kr' 
+	};
+	var defPath = 'https://via.placeholder.com/40x40/c4f1f1?text=%20';
 
 	var $bgWrapper = $('.bg-wrapper');
 	var $map = $('#map');
@@ -76,7 +80,9 @@ $(function() {
 	}
 
 	function initWeather() {
-		navigator.geolocation.getCurrentPosition(onSuccess, onError)
+		console.log(isIE11);
+		var options = isIE11 ? { enableHighAccuracy: false, maximumAge: 50000 } : {};
+		navigator.geolocation.getCurrentPosition(onSuccess, onError, options);
 		function onSuccess(r) {
 			var data = JSON.parse(JSON.stringify(sendData));
 			data.lat = r.coords.latitude;
@@ -86,13 +92,17 @@ $(function() {
 		}
 
 		function onError(err) {
-			console.log(err);
+			var data = JSON.parse(JSON.stringify(sendData));
+			data.lat = 37.563229;
+			data.lon = 126.989871;
+			$.get(todayURL, data, onToday);
+			$.get(weeklyURL, data, onWeekly);
 		}
 	}
 
 	// openweathermap의 icon 가져오기
 	function getIcon(icon) {
-		return '//openweathermap.org/img/wn/' + icon + '@2x.png';
+		return 'https://openweathermap.org/img/wn/' + icon + '@2x.png';
 	}
 	
 	/*************** 이벤트 콜백 *****************/
@@ -101,12 +111,13 @@ $(function() {
 		var $wrapper = $('.weather-wrapper');
 		var $title = $wrapper.find('.title-wrap');
 		var $summary = $wrapper.find('.summary-wrap');
+		var $icon = $wrapper.find('.icon-wrap');
 		var $desc = $wrapper.find('.desc-wrap');
 		$title.find('.name').text(r.name + ', KR');
 		$title.find('.time').text( moment(r.dt*1000).format('hh시 mm분 기준') );
 		$summary.find('span').eq(0).text(r.weather[0].description);
 		$summary.find('span').eq(1).text('(' + r.weather[0].main + ')');
-
+		$icon.find('img').attr('src', getIcon(r.weather[0].icon));
 
 		var data = JSON.parse(JSON.stringify(sendData));
 		data.lat = r.coord.lat;
@@ -139,7 +150,7 @@ $(function() {
 			content += '<div class="co-wrapper '+(v.minimap ? '' : 'minimap')+'" data-lat="'+v.lat+'" data-lon="'+v.lon+'">';
 			content += '<div class="co-wrap '+(v.name == '독도' || v.name == '울릉도' ? 'dokdo' : '')+'">';
 			content += '<div class="icon-wrap">';
-			content += '<img src="'+defPath+'" class="icon w-100">';
+			content += '<img src="'+defPath+'" class="icon">';
 			content += '</div>';
 			content += '<div class="temp-wrap">';
 			content += '<span class="temp"></span>℃';
