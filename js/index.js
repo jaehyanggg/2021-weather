@@ -2,9 +2,7 @@
 kakao: ef49ff68e417124e9e441b85809adfd3
 openweathermap.com icon: http://openweathermap.org/img/wn/10d@2x.png
 
-24시간 전 날씨정보: https://api.openweathermap.org/data/2.5/onecall?lat=37.56322905592715&lon=126.98987106691214&exclude=&appid=02efdd64bdc14b279bc91d9247db4722&units=metric&dt=1620780822
-
-이재향 appid: '850ac9f9b1b71ba716eb6bf2cd560849'
+24시간 전 날씨정보: https://api.openweathermap.org/data/2.5/onecall?lat=37.56322905592715&lon=126.98987106691214&exclude=&appid=850ac9f9b1b71ba716eb6bf2cd560849&units=metric&dt=1620780822
 */
 
 
@@ -14,17 +12,20 @@ $(function() {
 	var map; // kakao 지도 객체
 	var time;
 	var timeDivision;
-	var mapCenter = { lat: 35.80, lon: 128.7 }
+	var mapCenter = { 
+		lat: 35.80, 
+		lon: 128.7 
+	}
 	var weatherIcon = {
-		i01d: 'bi-brightness-high',
-		i02d: 'bi-cloud-sun',
-		i03d: 'bi-cloud',
-		i04d: 'bi-clouds',
-		i09d: 'bi-cloud-rain-heavy',
-		i10d: 'bi-cloud-drizzle',
-		i11d: 'bi-cloud-lightning',
-		i13d: 'bi-cloud-snow',
-		i50d: 'bi-cloud-haze',
+		i01: 'bi-brightness-high',
+		i02: 'bi-cloud-sun',
+		i03: 'bi-cloud',
+		i04: 'bi-clouds',
+		i09: 'bi-cloud-rain-heavy',
+		i10: 'bi-cloud-drizzle',
+		i11: 'bi-cloud-lightning',
+		i13: 'bi-cloud-snow',
+		i50: 'bi-cloud-haze',
 	}
 
 	var dailyURL = 'https://api.openweathermap.org/data/2.5/weather';
@@ -85,6 +86,7 @@ $(function() {
 		console.log(isIE11);
 		var options = isIE11 ? { enableHighAccuracy: false, maximumAge: 50000 } : {};
 		navigator.geolocation.getCurrentPosition(onSuccess, onError, options);
+
 		function onSuccess(r) {
 			var data = cloneObject(sendData);
 			data.lat = r.coords.latitude;
@@ -110,6 +112,8 @@ $(function() {
 	/*************** 이벤트 콜백 *****************/
 	function onToday(r) {
 		console.log(r);
+		var $bgWrapper = $('.bg-wrapper');
+		var $bgWrap = $bgWrapper.find('.bg-wrap');
 		var $wrapper = $('.weather-wrapper');
 		var $title = $wrapper.find('.title-wrap');
 		var $summary = $wrapper.find('.summary-wrap');
@@ -123,23 +127,28 @@ $(function() {
 		$desc.find('.temp span').text(r.main.temp);
 		$desc.find('.temp-feel span').text(r.main.feels_like);
 
+		$bgWrapper.children('div').eq(0).attr('class', 'bg-wrap bg1');
+		$bgWrapper.children('div').eq(1).attr('class', 'bg-wrap bg2');
+		$bgWrapper.children('div').eq(2).attr('class', 'bg-wrap bg3');
+		$bgWrap.addClass(weatherIcon['i'+r.weather[0].icon.substring(0, r.weather[0].icon.length - 1)])
+
 		var data = cloneObject(sendData);;
 		data.lat = r.coord.lat;
 		data.lon = r.coord.lon;
 		data.dt = r.dt - 86400;
 		$.get(yesterdayURL, data, onYesterday);
+
 		function onYesterday(r2) {
 			var gap = (r.main.temp - r2.current.temp).toFixed(1);
-			if(gap == 0) {
+			if (gap == 0) {
 				$desc.find('.temp-desc .josa').text('와');
 				$desc.find('.temp-desc .gap').hide();
 				$desc.find('.temp-desc .desc').text('같아요');
-			} 
-			else {
+			} else {
 				$desc.find('.temp-desc .josa').text('보다');
 				$desc.find('.temp-desc .gap').show();
 				$desc.find('.temp-desc .gap span').text(Math.abs(gap));
-				$desc.find('.temp-desc .desc').text( (gap > 0) ? '높아요' : '낮아요' );
+				$desc.find('.temp-desc .desc').text((gap > 0) ? '높아요' : '낮아요');
 			}
 		}
 	}
@@ -162,6 +171,7 @@ $(function() {
 				settings: { slidesToShow: 3 }
 			}]
 		}
+
 		r.list.forEach(function(v) {
 			html += '<div class="slide">';
 			html += '<div class="date-wrap">'+moment(v.dt*1000).format('D일 h시')+'</div>';
@@ -181,7 +191,9 @@ $(function() {
 		makeSlickButton($slick, $btPrev, $btNext);
 	}
 
+
 	function onGetCity(r) {
+		// console.log(r.city.length)
 		r.city.forEach(function(v, i) {
 			var content = '';
 			content += '<div class="co-wrapper '+(v.minimap ? '' : 'minimap')+'" data-lat="'+v.lat+'" data-lon="'+v.lon+'">';
@@ -206,9 +218,10 @@ $(function() {
 			$(customOverlay.a).mouseleave(onOverlayLeave);
 			$(customOverlay.a).click(onOverlayClick);
 
-			var html = '<li class="city '+(v.title ? 'title' : '')+'">'+v.name+'</li>';
+			var html = '<li class="city '+(v.title ? 'title' : '')+'" data-lat="' + v.lat + '" data-lon="' + v.lon + '">'+v.name+'</li>';
 			$('.weather-wrapper .city-wrap').append(html);
 		});
+		$('.weather-wrapper .city-wrap .city').click(onCityClick);
 		$(window).trigger('resize');
 	}
 
@@ -220,8 +233,7 @@ $(function() {
 			$('.minimap').hide();
 			$('.map-wrapper .co-wrapper').addClass('active');
 			map.setLevel(14);
-		}
-		else {
+		} else {
 			map.setLevel(13);
 			$('.minimap').show();
 			$('.map-wrapper .co-wrapper').removeClass('active');
@@ -245,8 +257,16 @@ $(function() {
 	}
 
 
-
 	/*************** 이벤트 등록 *****************/
+	function onCityClick() {
+		var data = cloneObject(sendData);
+		data.lat = $(this).data('lat'); // data-lat
+		data.lon = $(this).data('lon'); // data-lon
+		$('.weather-wrapper .city-wrapper').hide();
+		$.get(dailyURL, data, onToday);
+		$.get(weeklyURL, data, onWeekly);
+	}
+
 	function onOverlayClick() {
 		var data = cloneObject(sendData);
 		data.lat = $(this).find('.co-wrapper').data('lat'); // data-lat
@@ -265,7 +285,9 @@ $(function() {
 		data.lat = $(this).find('.co-wrapper').data('lat');	// data-lat
 		data.lon = $(this).find('.co-wrapper').data('lon');	// data-lon
 		$.get(dailyURL, data, onLoad.bind(this));
+
 		function onLoad(r) {
+			// console.log(r);
 			$(this).find('.temp').text(r.main.temp);
 			$(this).find('.icon').attr('src', getIcon(r.weather[0].icon));
 		}
