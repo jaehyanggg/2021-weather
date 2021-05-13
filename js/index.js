@@ -1,6 +1,8 @@
 /* 
 카카오: ef49ff68e417124e9e441b85809adfd3
 openweathermap.com icon: http://openweathermap.org/img/wn/10d@2x.png
+
+24시간 전 날씨정보: https://api.openweathermap.org/data/2.5/onecall?lat=37.56322905592715&lon=126.98987106691214&exclude=&appid=02efdd64bdc14b279bc91d9247db4722&units=metric&dt=1620780822
 */
 
 $(function() {
